@@ -40,7 +40,7 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        val initialFragment : StopsListFragment = StopsListFragment.newInstance(listener, currentLocation)
+        val initialFragment : StopsListFragment = StopsListFragment.newInstance(listener, currentLocation, true)
         childFragmentManager.beginTransaction().apply {
             replace(R.id.favorites_container, initialFragment)
             commit()
@@ -87,7 +87,7 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
                     }
                 } else {
 
-                    val newFrag = StopsListFragment.newInstance(listener, currentLocation)
+                    val newFrag = StopsListFragment.newInstance(listener, currentLocation, true)
                     childFragmentManager.beginTransaction().apply {
                         replace(R.id.favorites_container, newFrag)
                         commit()

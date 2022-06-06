@@ -45,11 +45,11 @@ class Trip {
      * @param tripData A List<String> of the trip data
      * @return Trip created from the Database data
      */
-    constructor(tripData: List<String>, stopsOnTrip: List<Stop>){
+    constructor(tripData: List<String>){
         _id =   tripData[0].toInt()
         _name = tripData[1]
         _isFavorite = tripData[2].toShort()
-        _stops = stopsOnTrip
+        _stops = listOf()
     }
 
     companion object {

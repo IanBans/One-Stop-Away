@@ -23,6 +23,7 @@ class RouteListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
 
         viewModel.populateTrips()
         trips = viewModel.trips

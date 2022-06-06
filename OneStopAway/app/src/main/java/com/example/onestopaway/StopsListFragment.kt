@@ -1,21 +1,15 @@
 package com.example.onestopaway
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import com.example.onestopaway.placeholder.PlaceholderContent
 import com.google.android.gms.maps.model.LatLng
 
 /**
@@ -29,17 +23,19 @@ class StopsListFragment : Fragment() {
     private lateinit var recyclerAdapter : StopRecyclerViewAdapter
     private val viewModel: TransitItemsViewModel by activityViewModels {TransitItemsViewmodelFactory((requireActivity().application as OneBusAway).repository)}
     private var currentLocation: LatLng = LatLng(48.73280011832849, -122.48508132534693)
+    private var fromMainActivity = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // if fragment was launched from the main activity, populate with closest stops
         // if from detail fragment, filter by favorites
-        if(activity is MainActivity && parentFragment == null) {
+        if(fromMainActivity) {
             viewModel.getClosestStops(currentLocation.latitude, currentLocation.longitude, 1.0)
-        } else if(parentFragment is FavoritesFragment){
+        } else {
             viewModel.populateFavorites()
         }
         stops = listOf()
         stops = viewModel.stops
+        Log.d("STOP_DEBUG", "stops length " + stops.size.toString())
     }
 
     override fun onAttach(context: Context) {
@@ -58,7 +54,7 @@ class StopsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_stops_list, container, false)
-        recyclerAdapter = StopRecyclerViewAdapter(viewModel.stops, listener)
+        recyclerAdapter = StopRecyclerViewAdapter(stops, listener)
 
 
         // Set the adapter
@@ -74,10 +70,11 @@ class StopsListFragment : Fragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(lr: StopListener, location: LatLng) =
+        fun newInstance(lr: StopListener, location: LatLng, launchedFromMain: Boolean) =
             StopsListFragment().apply {
                 listener = lr
                 currentLocation = location
+                fromMainActivity = launchedFromMain
             }
     }
 }

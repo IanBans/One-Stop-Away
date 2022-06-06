@@ -2,6 +2,7 @@ package com.example.onestopaway
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.appcompat.app.AppCompatActivity
@@ -37,8 +38,10 @@ class MainActivity : AppCompatActivity(), StopListener {
         binding.menuBar.setOnItemSelectedListener {
             onOptionsItemSelected(it)
         }
+        GlobalScope.launch {
+            (application as OneBusAway).repository.populateDatabase()
+        }
         if(savedInstanceState == null) {
-            viewModel.populateDatabase()
             val route = RouteListFragment()
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.main_page_container, route)
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity(), StopListener {
                         }
                 }
                 R.id.stops -> {
-                        val newFrag = StopsListFragment.newInstance(this, currentLoc)
+                        val newFrag = StopsListFragment.newInstance(this, currentLoc, false)
                         supportFragmentManager.beginTransaction().apply {
                             replace(R.id.main_page_container, newFrag)
                             commit()
@@ -137,7 +140,7 @@ class MainActivity : AppCompatActivity(), StopListener {
                     }
                 } else {
                     // Populate nearest stops
-                    val newFrag = StopsListFragment.newInstance(this, currentLoc)
+                    val newFrag = StopsListFragment.newInstance(this, currentLoc, false)
                     supportFragmentManager.beginTransaction().apply {
                         replace(R.id.main_page_container, newFrag)
                         commit()
@@ -150,6 +153,7 @@ class MainActivity : AppCompatActivity(), StopListener {
         }
     }
 
+@SuppressLint("MissingPermission")
 fun getLocation(): LatLng {
     val client = LocationServices.getFusedLocationProviderClient(this)
     var location : LatLng?

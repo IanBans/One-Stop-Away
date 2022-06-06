@@ -31,7 +31,7 @@ class DataRepository(private val database :DatabaseManager) {
 
     suspend fun populateStops() {
         val Surl = URL(STOPURLCSV)
-        val scn = Scanner(Surl.openStream())
+        val scn = Scanner(Surl.readText())
 
         var Line: String
         var Split: List<String>
@@ -65,7 +65,7 @@ class DataRepository(private val database :DatabaseManager) {
 
         //Populates Trip Table
         val Turl = URL(TRIPURL)
-        val scan = Scanner(Turl.openStream())
+        val scan = Scanner(Turl.readText())
 
         var ln: String
         var spt: List<String>
@@ -84,7 +84,7 @@ class DataRepository(private val database :DatabaseManager) {
 
         //Populates Route Table
         val Rurl = URL(ROUTEURL)
-        val scanner = Scanner(Rurl.openStream())
+        val scanner = Scanner(Rurl.readText())
 
         var line: String
         var split: List<String>
@@ -123,16 +123,9 @@ class DataRepository(private val database :DatabaseManager) {
     fun makeTripFromDB(tripData: List<String>): Trip{
 
         // Get Route Stops
-        val stopData = database.getStopsOnRoute(tripData[2].toInt())
-        val routeStops = mutableListOf<Stop>()
-
-        stopData.forEach {
-            // Make stop from row
-            routeStops.add(Stop(it))
-        }
 
         // Make route and return
-        return Trip(tripData, routeStops)
+        return Trip(tripData)
     }
 
    suspend fun readAllTrips(): List<Trip> {
