@@ -102,7 +102,6 @@ class MainActivity : AppCompatActivity(), Listener {
                             commit()
                         }
                     }
-                Log.d("BUTTONLOG", "clicked route tab")
                 true
             }
             R.id.favorites -> {
@@ -121,7 +120,6 @@ class MainActivity : AppCompatActivity(), Listener {
                         commit()
                     }
                 }
-                Log.d("BUTTONLOG", "clicked favorites tab")
                 true
             }
             R.id.stops -> {
@@ -141,7 +139,6 @@ class MainActivity : AppCompatActivity(), Listener {
                         commit()
                     }
                 }
-                Log.d("BUTTONLOG", "clicked stop tab")
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -159,7 +156,6 @@ fun getLocation(): LatLng {
     } else {
         client.lastLocation.addOnSuccessListener {
                 currentLoc = LatLng(it.latitude, it.longitude)
-                Log.d("LOC", currentLoc.toString())
         }
     }
     return currentLoc

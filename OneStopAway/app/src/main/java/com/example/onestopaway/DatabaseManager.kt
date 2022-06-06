@@ -159,10 +159,10 @@ class DatabaseManager(context: Context) : SQLiteOpenHelper(context, "database", 
     }
 
     //Returns route id based on route name
-    fun getRouteID(name: String): Int{
+    fun getTripID(name: String): Int{
         val id: Int
         val param = Array(1){name}
-        val cursor = writableDatabase.rawQuery("SELECT $TRIP_TABLE_NAME.${Route.ROUTE_ID_COL} FROM $TRIP_TABLE_NAME WHERE $TRIP_TABLE_NAME.${Route.NAME_COL} = ?", param)
+        val cursor = writableDatabase.rawQuery("SELECT $TRIP_TABLE_NAME.${Trip.TRIP_ID_COL} FROM $TRIP_TABLE_NAME WHERE $TRIP_TABLE_NAME.${Trip.NAME_COL} = ?", param)
 
 
         cursor.moveToNext()

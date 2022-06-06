@@ -89,7 +89,6 @@ class TransitItemsViewModel(private val repository: DataRepository): ViewModel()
 
         }
 
-        Log.d("OneStopAway", "Distance ($maxDistance) Stops: ${_stops.size}")
 
     }
 

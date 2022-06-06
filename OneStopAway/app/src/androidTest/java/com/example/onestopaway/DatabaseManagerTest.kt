@@ -53,9 +53,10 @@ class DatabaseManagerTest {
     }
 
     @Test
+    @ExperimentalCoroutinesApi
     fun correctRouteID() = runTest {
-        repository.populateRoutes()
-        val test = db.getRouteID("331 Cordata/WCC")
+        repository.populateTrips()
+        val test = db.getTripID("72X Bellingham")
 
         assertEquals(test, 2028020)
     }
@@ -80,7 +81,7 @@ class DatabaseManagerTest {
 
     @Test
 
-    fun correctTimes()  {
+    fun correctTimes()   {
         val test = db.getArrivalTimesByStop(153)
 
         assertEquals(test[0][0], "16:08:00")
@@ -101,7 +102,6 @@ class DatabaseManagerTest {
     fun getClosestArrivalTimesByStop() {
         val result = db.getArrivalTimesByStop(3)
 
-        Log.d("Testing", result.toString())
         assertTrue(result.isNotEmpty())
 
     }
