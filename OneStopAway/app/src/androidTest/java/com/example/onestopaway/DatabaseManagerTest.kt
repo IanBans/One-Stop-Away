@@ -23,15 +23,12 @@ class DatabaseManagerTest {
         db.clearDBAndRecreate()
         repository = DataRepository(db)
 
-        repository.populateRoutes()
-        repository.populateStops()
-        repository.populateTrips()
     }
 
     @Test
     @ExperimentalCoroutinesApi
     fun  stopsAreAdded() = runTest {
-
+        repository.populateStops()
         assertTrue(repository.numStopsFetched > 1)
         assertEquals(repository.readAllStops().size, repository.numStopsFetched)
 
@@ -40,6 +37,7 @@ class DatabaseManagerTest {
     @Test
     @ExperimentalCoroutinesApi
     fun tripsAreAdded() = runTest  {
+        repository.populateTrips()
         assertTrue(repository.numTripsFetched > 1)
         assertEquals(repository.readAllTrips().size, repository.numTripsFetched)
 
@@ -48,13 +46,15 @@ class DatabaseManagerTest {
     @Test
     @ExperimentalCoroutinesApi
     fun routesAreAdded() = runTest {
+        repository.populateRoutes()
         assertTrue(repository.numRoutesFetched > 1)
         assertEquals(db.readAllRoutes().size, repository.numRoutesFetched)
 
     }
 
     @Test
-    fun correctRouteID() {
+    fun correctRouteID() = runTest {
+        repository.populateRoutes()
         val test = db.getRouteID("331 Cordata/WCC")
 
         assertEquals(test, 2028020)

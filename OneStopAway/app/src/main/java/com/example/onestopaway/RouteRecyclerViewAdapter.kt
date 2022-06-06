@@ -30,7 +30,6 @@ class RouteRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.routeNumber.text = item.id.toString()
         holder.routeName.text = item.name
     }
 

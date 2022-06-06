@@ -7,19 +7,15 @@ import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
 import com.example.onestopaway.databinding.ActivityMainBinding
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), StopListener {
+class MainActivity : AppCompatActivity(), Listener {
 
     private var _binding : ActivityMainBinding? = null
     private val viewModel : TransitItemsViewModel by viewModels { TransitItemsViewmodelFactory((application as OneBusAway).repository)}
@@ -38,11 +34,10 @@ class MainActivity : AppCompatActivity(), StopListener {
         binding.menuBar.setOnItemSelectedListener {
             onOptionsItemSelected(it)
         }
-        GlobalScope.launch {
-            (application as OneBusAway).repository.populateDatabase()
-        }
+
         if(savedInstanceState == null) {
-            val route = RouteListFragment()
+            viewModel.populateDatabase()
+            val route = RouteListFragment.newInstance(this)
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.main_page_container, route)
                 commit()
@@ -68,7 +63,7 @@ class MainActivity : AppCompatActivity(), StopListener {
                         }
                 }
                 R.id.stops -> {
-                        val newFrag = StopsListFragment.newInstance(this, currentLoc, false)
+                        val newFrag = StopsListFragment.newInstance(this, currentLoc, true)
                         supportFragmentManager.beginTransaction().apply {
                             replace(R.id.main_page_container, newFrag)
                             commit()
@@ -140,7 +135,7 @@ class MainActivity : AppCompatActivity(), StopListener {
                     }
                 } else {
                     // Populate nearest stops
-                    val newFrag = StopsListFragment.newInstance(this, currentLoc, false)
+                    val newFrag = StopsListFragment.newInstance(this, currentLoc, true)
                     supportFragmentManager.beginTransaction().apply {
                         replace(R.id.main_page_container, newFrag)
                         commit()
@@ -154,6 +149,7 @@ class MainActivity : AppCompatActivity(), StopListener {
     }
 
 @SuppressLint("MissingPermission")
+// gets the user location
 fun getLocation(): LatLng {
     val client = LocationServices.getFusedLocationProviderClient(this)
     var location : LatLng?
@@ -190,5 +186,6 @@ override fun onRequestPermissionsResult(
 
         }
     }
+
 
 }

@@ -1,15 +1,11 @@
 package com.example.onestopaway
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
-import com.example.onestopaway.databinding.ActivityMainBinding
 import com.example.onestopaway.databinding.FragmentFavoritesBinding
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayout
@@ -28,7 +24,7 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var listener: StopListener
+    private lateinit var listener: Listener
     private var _binding : FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
     private val viewModel : TransitItemsViewModel by activityViewModels {TransitItemsViewmodelFactory((requireActivity().application as OneBusAway).repository)}
@@ -40,7 +36,8 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
             param2 = it.getString(ARG_PARAM2)
         }
 
-        val initialFragment : StopsListFragment = StopsListFragment.newInstance(listener, currentLocation, true)
+        viewModel.populateFavorites()
+        val initialFragment : StopsListFragment = StopsListFragment.newInstance(listener, currentLocation, false)
         childFragmentManager.beginTransaction().apply {
             replace(R.id.favorites_container, initialFragment)
             commit()
@@ -69,7 +66,7 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(lr: StopListener, loc: LatLng) =
+        fun newInstance(lr: Listener, loc: LatLng) =
             FavoritesFragment().apply {
                 listener = lr
                 currentLocation = loc
@@ -86,8 +83,7 @@ class FavoritesFragment : Fragment(), TabLayout.OnTabSelectedListener {
                         commit()
                     }
                 } else {
-
-                    val newFrag = StopsListFragment.newInstance(listener, currentLocation, true)
+                    val newFrag = StopsListFragment.newInstance(listener, currentLocation, false)
                     childFragmentManager.beginTransaction().apply {
                         replace(R.id.favorites_container, newFrag)
                         commit()

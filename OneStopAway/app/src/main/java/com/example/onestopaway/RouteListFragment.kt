@@ -19,7 +19,7 @@ class RouteListFragment : Fragment() {
     private val viewModel : TransitItemsViewModel by activityViewModels {
         TransitItemsViewmodelFactory((requireActivity().application as OneBusAway).repository)}
     private lateinit var trips : List<Trip>
-    private lateinit var listener : StopListener
+    private lateinit var listener : Listener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class RouteListFragment : Fragment() {
 
         // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(lr : StopListener) =
+        fun newInstance(lr : Listener) =
             RouteListFragment().apply {
                 listener = lr
             }
